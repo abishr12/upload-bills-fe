@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import Dropzone from 'react-dropzone';
+import Dropzone, {FileWithPath} from 'react-dropzone';
 import "./DropzoneOverlay.css";
 import axios from 'axios';
 
@@ -8,18 +8,16 @@ interface DropzoneOverlayProps {
 }
 
 const DropzoneOverlay = ({ setUpdateExpenseTable }: DropzoneOverlayProps) => {
-
-  // TODO: fix any type here
-  const onDrop = useCallback((acceptedFiles: any[]) => {
+  const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     const file = acceptedFiles[0];
     const formData = new FormData();
     formData.append('file', file);
     axios.post('http://localhost:8080/bills', formData)
       .then((response) => {
-        console.log(response);
         setUpdateExpenseTable(true);
       });
-  }, []);
+  }, [setUpdateExpenseTable]);
+  
   return (
     <Dropzone maxFiles={1} noClick={true} onDrop={onDrop}>
   {({getRootProps, getInputProps, isDragActive}) => (
